@@ -1,0 +1,16 @@
+PODS:
+  - VideoDecoder (1.1.1)
+
+DEPENDENCIES:
+  - VideoDecoder
+
+SPEC REPOS:
+  trunk:
+    - VideoDecoder
+
+SPEC CHECKSUMS:
+  VideoDecoder: 53b676cfa79a79912d8a4d6efcab54d076940461
+
+PODFILE CHECKSUM: d93c33f9e7cf8e615efe2e424c6883a5598a6134
+
+COCOAPODS: 1.15.2

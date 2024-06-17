@@ -122,7 +122,6 @@ open class H265Decoder: VideoDecoder {
         var currntUnit: H265NalUnit?
         nalUnits.forEach { nalUnit in
             if let unit = nalUnit as? H265NalUnit {
-                print("unit.type \(unit.type)")
                 switch unit.type {
                 case .vps:
                     vpsUnit = unit

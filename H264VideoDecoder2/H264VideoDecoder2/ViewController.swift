@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     var videoFileReader: VideoFileReader!
     var decodeQueue = DispatchQueue(label: "com.videoDecoder.queue")
     var timer: Timer?
-    var timerCounter = 0
+    var timerCounter = 1
     var decodeTimer: DispatchSourceTimer?
 
 
@@ -29,16 +29,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        decoder = H265Decoder(delegate: self)
-//        supplyDataToDecode()
-//        setupTimer()
-        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.supplyDataToDecode), userInfo: nil, repeats: true)
-     //   supplyDataToDecode()
-        
-        let fileUrl = Bundle.main.url(forResource: "frames-0090", withExtension: "h265")
-         let player = AVPlayer(url: fileUrl!)
-         player.play()
-        
+        videoFileReader = .init(.h264,counter: timerCounter)
+
+        decoder = H264Decoder(delegate: self)
+        timer = Timer.scheduledTimer(timeInterval: 0.001
+                                     , target: self, selector: #selector(self.supplyDataToDecode), userInfo: nil, repeats: true)
     }
 //    func setupTimer() {
 //        if let _ = decodeTimer {
@@ -53,43 +48,22 @@ class ViewController: UIViewController {
 //    }
 //
     @objc  func supplyDataToDecode() {
-
-        timerCounter += 1
-
-        videoFileReader = .init(.h265,counter: timerCounter)
-        
         self.takeVideoPackets()
-
-//        var name = String(format: "frames-%04d",timerCounter)
-//         print("name of file \(name)")
-//
-//        if let filePathForResource = Bundle.main.url(forResource: name, withExtension: "h265") {
-//            //       print("filePathForResource \(filePathForResource)")
-//
-//            do {
-//                var data = try Data(contentsOf: filePathForResource)
-//                print("data \(data.count)")
-//                decoder.decodeOnePacket(data)
-//            }
-//            catch(let error) {
-//                print(error.localizedDescription)
-//            }
-//            }
-
      }
 
     func takeVideoPackets() {
         //This is not the case in actual projects
         if let videoPacket = videoFileReader.nextVideoPacket()  {
+            print("videoPacket found")
             decoder.decodeOnePacket(videoPacket)
         }else {//end
-//            videoFileReader = .init(type,counter: <#T##Int#>)
-            DispatchQueue.main.async { [weak self] in
-                if let self = self {
-//                    if self.startButton.isSelected {
-//                        self.startAction(self.startButton)
-//                    }
-                }
+            print("takeVideoPackets is nil")
+            timerCounter += 1
+            videoFileReader = .init(.h264,counter: timerCounter)
+            if timerCounter == 150 {
+                timer?.invalidate()
+                timer = nil
+                Utility.showAlert(vc: self, title: "No more frames to show", message: "")
             }
         }
     }

@@ -17,50 +17,64 @@ class VideoFileReader {
         self.type = type
         let forResource = String(format: "frames-%04d", counter)
         print("Reading new file \(forResource)")
-        guard let path = Bundle.main.path(forResource: forResource, ofType: "h265") else {
+        
+        guard let documentsPathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            //This gives you the URL of the path
             return
         }
-        fileStream = InputStream.init(fileAtPath: path)
-        fileStream?.open()
+        
+        let pathForH264Folder = documentsPathURL.appending(component: "H264-Frames")
+        
+        let path = pathForH264Folder.appending(component: "\(forResource).h265").path
+        
+        if FileManager.default.fileExists(atPath: path) {
+            fileStream = InputStream.init(fileAtPath: path)
+            fileStream?.open()
+        } else {
+                print("file does not exists at path")
+        }
+//        guard let path = Bundle.main.path(forResource: forResource, ofType: "h265") else {
+//            return
+//        }
     }
     
     func nextVideoPacket() -> VideoPacket? {
         
         guard streamBuffer.count != 0 || readStremData() != 0 else {
-            print("streamBuffer count is 0, \nreadStream data is zero")
-            print("Returning")
+//            print("streamBuffer count is 0, \nreadStream data is zero")
+//            print("Returning")
             return nil
         }
         
         guard streamBuffer.count > 4 && [UInt8](streamBuffer[0...3]) == [0,0,0,1] else {
-            print("streamBuffer count is less than 4, \nstram buffer does not contain 0,0,0,1 header")
-            print("Returning")
+//            print("streamBuffer count is less than 4, \nstram buffer does not contain 0,0,0,1 header")
+//            print("Returning")
             return nil
         }
         
         var startIndex = 4
 
         
-            while ((startIndex + 3) < streamBuffer.count) {
+        while ((startIndex + 3) < streamBuffer.count) {
 //                print("1st while lopp")
 //                print("startIndex \(startIndex) , Stream buffer count \(streamBuffer.count)")
-                if [UInt8](streamBuffer[startIndex...startIndex+3]) == [0,0,0,1] {
-                    let data = [UInt8](streamBuffer[0..<startIndex])
-                    streamBuffer.removeSubrange(0..<startIndex)
-                    return VideoPacket.init(data, fps: fps, type: type, videoSize: CGSize(width: 1920, height: 1080))
-                }
-                startIndex += 1
-            }
-            if startIndex > 4 {
-//                print("start index is greater than 4, \n then read and return video packet")
-                let data = [UInt8](streamBuffer[0...startIndex])
-                streamBuffer.removeSubrange(0...startIndex)
+            if [UInt8](streamBuffer[startIndex...startIndex+3]) == [0,0,0,1] {
+                let data = [UInt8](streamBuffer[0..<startIndex])
+                streamBuffer.removeSubrange(0..<startIndex)
                 return VideoPacket.init(data, fps: fps, type: type, videoSize: CGSize(width: 1920, height: 1080))
             }
-            print("return nil")
-            return nil
-            
+            startIndex += 1
         }
+        if startIndex > 4 {
+//                print("start index is greater than 4, \n then read and return video packet")
+            let data = [UInt8](streamBuffer[0...startIndex])
+            streamBuffer.removeSubrange(0...startIndex)
+            return VideoPacket.init(data, fps: fps, type: type, videoSize: CGSize(width: 1920, height: 1080))
+        }
+//            print("return nil")
+        return nil
+        
+    }
 //        @Arpit723
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <device id="retina6_12" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -13,31 +13,58 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="H264VideoDecoder2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="852" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9Hb-oc-hgl">
-                                <rect key="frame" x="0.0" y="59" width="393" height="200"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="xcw-0R-c3a"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="59" width="852" height="250"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sjs-ZH-cDK">
+                                <rect key="frame" x="404" y="248" width="44.333333333333314" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IRi-z0-c53">
+                                <rect key="frame" x="309.66666666666669" y="248" width="44.333333333333314" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pa2-xr-rNA" customClass="KSTimelineView" customModule="H264VideoDecoder2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="309" width="852" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="oiF-Md-NU8"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9Hb-oc-hgl" secondAttribute="trailing" id="04v-CA-dOU"/>
+                            <constraint firstItem="Pa2-xr-rNA" firstAttribute="top" secondItem="9Hb-oc-hgl" secondAttribute="bottom" id="FiX-H6-ZAL"/>
                             <constraint firstItem="9Hb-oc-hgl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="HHS-hK-ANO"/>
+                            <constraint firstItem="IRi-z0-c53" firstAttribute="centerY" secondItem="Sjs-ZH-cDK" secondAttribute="centerY" id="Iac-2u-WQj"/>
                             <constraint firstItem="9Hb-oc-hgl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JXM-Q2-faX"/>
+                            <constraint firstItem="Sjs-ZH-cDK" firstAttribute="leading" secondItem="IRi-z0-c53" secondAttribute="trailing" constant="50" id="K4Y-ep-3uF"/>
+                            <constraint firstItem="Sjs-ZH-cDK" firstAttribute="centerX" secondItem="Pa2-xr-rNA" secondAttribute="centerX" id="Rui-aN-EbT"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Pa2-xr-rNA" secondAttribute="bottom" id="ith-DO-g3e"/>
+                            <constraint firstItem="Pa2-xr-rNA" firstAttribute="top" secondItem="Sjs-ZH-cDK" secondAttribute="bottom" constant="40" id="oAi-rZ-IZt"/>
+                            <constraint firstItem="Pa2-xr-rNA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rxM-NP-zXK"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Pa2-xr-rNA" secondAttribute="trailing" id="zHg-M9-iXh"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="baseDateLbl" destination="IRi-z0-c53" id="6wl-tb-DQT"/>
+                        <outlet property="dateLbl" destination="Sjs-ZH-cDK" id="3Ru-yS-DVN"/>
                         <outlet property="imageView" destination="9Hb-oc-hgl" id="GLh-tL-bnS"/>
+                        <outlet property="timeLineView" destination="Pa2-xr-rNA" id="D0K-oK-9gP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-50" y="-27"/>
+            <point key="canvasLocation" x="-668.30985915492965" y="32.824427480916029"/>
         </scene>
     </scenes>
     <resources>

@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     var decoder: VideoDecoder!
-    var fps: Double = 80.0
+    var fps: Double = 25.0
     var type: EncodeType = .h264
     
     var videoFileReader: VideoFileReader!
@@ -115,10 +115,6 @@ extension ViewController: KSTimelineDelegate {
     
     func timeline(_ timeline: KSTimelineView, didScrollTo date: Date) {
         print(#function)
-    }
-    
-    func updateVideoFrame(for date: Date) {
-        print(#function)
         self.dateLbl.text = self.dateFormatter.string(from: date)
         let  timeDifference = abs(self.baseDate?.timeIntervalSince(date) ?? 0.0)
         print("timedifference \(timeDifference)")
@@ -130,10 +126,13 @@ extension ViewController: KSTimelineDelegate {
         }
     }
     
+    
     func setBaseDate(date: Date) {
         self.baseDate = date
         self.baseDateLbl.text = self.dateFormatter.string(from: date)
+        
         self.timeLineView.scrollToDate(date: date)
+        self.dateLbl.text = self.dateFormatter.string(from: date)
         timerCounter = 0
     }
 }

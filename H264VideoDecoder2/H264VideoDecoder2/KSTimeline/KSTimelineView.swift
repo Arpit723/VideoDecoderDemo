@@ -16,7 +16,6 @@ import UIKit
     
     func timeline(_ timeline: KSTimelineView, didScrollTo date: Date)
     
-    func updateVideoFrame(for date: Date)
     
     func setBaseDate(date: Date)
     
@@ -251,7 +250,8 @@ extension UIScreen {
                 
         let padding = UIScreen.main.bounds.width - UIScreen.main.widthOfSafeArea()
         
-        self.contentView.contentSize = CGSize(width: self.contentWidth + padding, height: self.bounds.height)
+        self.contentWidth = self.contentWidth + padding
+        self.contentView.contentSize = CGSize(width: self.contentWidth, height: self.bounds.height)
                                         
     }
     
@@ -376,12 +376,12 @@ extension KSTimelineView: UIScrollViewDelegate {
      */
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(#function)
-        if scrollView.contentOffset.x >=  scrollView.contentSize.width - (UIScreen.main.bounds.width * 2) {
+        if (scrollView.contentOffset.x + UIScreen.main.bounds.width * 2) >= scrollView.contentSize.width {
             //Boundary condition
             print("Boundary condition")
+            print("(UIScreen.main.bounds.width \(UIScreen.main.bounds.width)")
             self.contentWidth += KSTimelineRulerView.unit_content_width
-            let padding = UIScreen.main.bounds.width - UIScreen.main.widthOfSafeArea()
-            self.contentView.contentSize = CGSize(width: self.contentWidth + padding/2.0, height: self.bounds.height)
+            self.contentView.contentSize = CGSize(width: self.contentWidth, height: self.bounds.height)
 //////            self.basedDate = self.basedDate.addingTimeInterval(24 * 60 * 60)
 //////            self.currentDate = self.basedDate
             self.contentView.updateRuler()
@@ -402,16 +402,10 @@ extension KSTimelineView: UIScrollViewDelegate {
         let dateToUse = KSTimelineView.offsetToDate(offset: scrollView.contentOffset.x)
         
         let target_date = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: dateToUse)
-        print("timeline_x \(timeline_x)")
-//        else { return }
         
-        let padding = self.bounds.width
-        
+//        let padding = self.bounds.width
 //        var contentWidth = scrollView.contentSize.width - padding
-        //Note: To take only content width of reminders to calcualte exact hours
-        
-//        print("content_width_to_consider \(content_width_to_consider)")
-        
+
         let unit_hour_width = Double(KSTimelineRulerView.unit_content_width) / 24.0
         
         let unit_minute_width = unit_hour_width / 60
@@ -423,16 +417,12 @@ extension KSTimelineView: UIScrollViewDelegate {
         let minute = Int(floor((timeline_x - (CGFloat(hour) * unit_hour_width)) / unit_minute_width))
         
         let second = Int(floor((timeline_x - (CGFloat(hour) * unit_hour_width) - (CGFloat(minute) * unit_minute_width)) / unit_second_width))
-        print("hour \(hour) minute \(minute) second \(second)")
+//        print("hour \(hour) minute \(minute) second \(second)")
         if let date = Calendar.current.date(bySettingHour: Int(hour), minute: minute, second: second, of: target_date!) {
-            
             self.currentDate = date
-            self.delegate?.updateVideoFrame(for: date)
         }
         else {
-            
             self.currentDate = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: target_date!)
-            
         }
         
         self.delegate?.timeline(self, didScrollTo: self.currentDate)
